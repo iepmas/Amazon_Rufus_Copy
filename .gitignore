@@ -1,1 +1,12 @@
-.env
+*.jpg
+*.jpeg
+*.png
+data/images/
+fashion_index/
+*.index
+*.pkl
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+*.csv
