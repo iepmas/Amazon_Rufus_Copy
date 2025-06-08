@@ -1,0 +1,27 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from api.routes.text import router as text_router
+from api.routes.image import router as image_router
+
+app = FastAPI(
+    title="Amazon Rufus Copy",
+    description="A multimodal shopping assistant with text and image-based search",
+    version="1.0.0"
+)
+
+# Allow frontend to access this backend (CORS policy)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include text and image search routers
+app.include_router(text_router, prefix="/api")
+app.include_router(image_router, prefix="/api")
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello World"}

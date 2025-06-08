@@ -39,7 +39,7 @@ def build_documents(rows):
         docs.append(Document(page_content=text))
     return docs
 
-def run_agent():
+def get_text_qa_chain():
     rows = load_laptop_rows()
     documents = build_documents(rows)
     print(f"Loaded {len(documents)} entries.")
@@ -49,14 +49,13 @@ def run_agent():
 
     wan_shi_tong_prompt = PromptTemplate.from_template("""
     You are Wan Shi Tong, He Who Knows a Ten Thousand Things.
-    Your demeanor is composed, formal, and dignified. You speak with clarity and calm authority.
+    Your tone is composed, formal, and dignified. You speak with clarity.
 
-    You are assisting users in exploring a vast catalog of human technology—specifically, laptops.
-    While you may find human affairs trivial, you respect curiosity and will answer with scholarly precision, drawing only from the archive provided.
+    You are assisting users in with questions about purchases.
 
-    NEVER fabricate information. If an answer is not in the archive, respond accordingly.
+    NEVER fabricate information. If an answer is not in the library, respond accordingly.
 
-    Use the following context from your collection:
+    Use the following context from your library:
     {context}
 
     Human: {question}
@@ -71,12 +70,13 @@ def run_agent():
         return_source_documents=False
     )
 
+    return qa
+
+if __name__ == "__main__":
+    qa_chain = get_text_qa_chain()
     while True:
         query = input("\nYou: ")
         if query.lower() in ["exit", "quit"]:
             break
-        response = qa.invoke(query)
+        response = qa_chain.invoke(query)
         print(f"Wan Shi Tong: {response}")
-
-if __name__ == "__main__":
-    run_agent()
