@@ -1,6 +1,7 @@
 *.jpg
 *.jpeg
 *.png
+*.json
 data/images/
 fashion_index/
 *.index
