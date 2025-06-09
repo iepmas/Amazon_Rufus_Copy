@@ -22,7 +22,7 @@ def load_laptop_rows():
         )
 
         cursor = db.cursor()
-        cursor.execute("SELECT Company, Product, Ram, OS, Price_euros, CPU_model, GPU_model FROM laptops")
+        cursor.execute("SELECT gender, master_category, sub_category, article_type, base_color, season, year, usage_type, product_display_name FROM fashion_products")
         rows = cursor.fetchall()
         cursor.close()
         db.close()
@@ -35,7 +35,10 @@ def load_laptop_rows():
 def build_documents(rows):
     docs = []
     for r in rows:
-        text = f"{r[0]} {r[1]} with {r[2]}GB RAM, {r[3]}, priced at €{r[4]:.2f}. CPU: {r[5]}, GPU: {r[6]}"
+        text = (
+            f"{r[0]} {r[1]} > {r[2]} > {r[3]} - {r[8]} in {r[4]} color "
+            f"for {r[6]} {r[5]} ({r[7]} use)"
+        )
         docs.append(Document(page_content=text))
     return docs
 
