@@ -3,18 +3,12 @@
 # Python
 __pycache__/
 *.py[cod]
-*.pkl
 .env
 .venv/
 venv/
 env/
 *.sqlite3
 .DS_Store
-
-# Embeddings and models
-embeddings/
-fashion_faiss.index
-fashion_metadata.pkl
 
 # Node
 frontend/node_modules/

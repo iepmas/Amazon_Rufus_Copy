@@ -3,52 +3,16 @@ from langchain_core.documents import Document
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-import mysql.connector
+import pandas as pd
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-def load_laptop_rows():
-    try:
-        db = mysql.connector.connect(
-            host="localhost",
-            port=3306,
-            user="root",
-            password="root",
-            database="commerce_ai",
-            connection_timeout=5,
-            use_pure=True
-        )
-
-        cursor = db.cursor()
-        cursor.execute("SELECT gender, master_category, sub_category, article_type, base_color, season, year, usage_type, product_display_name FROM fashion_products")
-        rows = cursor.fetchall()
-        cursor.close()
-        db.close()
-        return rows
-
-    except mysql.connector.Error as err:
-        print("MySQL Error:", err)
-        exit(1)
-
-def build_documents(rows):
-    docs = []
-    for r in rows:
-        text = (
-            f"{r[0]} {r[1]} > {r[2]} > {r[3]} - {r[8]} in {r[4]} color "
-            f"for {r[6]} {r[5]} ({r[7]} use)"
-        )
-        docs.append(Document(page_content=text))
-    return docs
-
 def get_text_qa_chain():
-    rows = load_laptop_rows()
-    documents = build_documents(rows)
-    print(f"Loaded {len(documents)} entries.")
 
     embeddings = OpenAIEmbeddings()
-    vectorstore = FAISS.from_documents(documents, embeddings)
+    vectorstore = FAISS.load_local("embeddings/text_faiss", embeddings, allow_dangerous_deserialization=True)
 
     wan_shi_tong_prompt = PromptTemplate.from_template("""
     You are Raymond, He Who Knows a Ten Thousand Things.

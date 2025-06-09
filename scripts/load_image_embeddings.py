@@ -1,22 +1,26 @@
 import os
-import pandas as pd
-from PIL import Image
-import torch
-import clip
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 import numpy as np
+import pandas as pd
 import faiss
 import pickle
+from PIL import Image
+from torchvision import models, transforms
+import torch
 from tqdm import tqdm
+from image_model import get_resnet_embedding_model, get_preprocess
 
-model, preprocess = clip.load("ViT-B/32")
+# Load ResNet18 model
+model = get_resnet_embedding_model()
+transform = get_preprocess()
 
+# Load data
 csv_path = "data/styles.csv"
 image_folder = "data/images/"
-max_images = 44000
+max_images = 2000
 
-df = pd.read_csv(csv_path, on_bad_lines="skip")
-df = df.head(max_images)  # Too many files lol
-
+df = pd.read_csv(csv_path, on_bad_lines="skip").head(max_images)
 embeddings = []
 metadata = []
 
@@ -26,28 +30,32 @@ for _, row in tqdm(df.iterrows(), total=len(df)):
     img_path = os.path.join(image_folder, fname)
 
     try:
-        image = preprocess(Image.open(img_path).convert("RGB")).unsqueeze(0)
+        image = Image.open(img_path).convert("RGB")
+        input_tensor = transform(image).unsqueeze(0)
         with torch.no_grad():
-            emb = model.encode_image(image).squeeze().numpy()
+            emb = model(input_tensor).squeeze().numpy()
+            emb = emb.flatten()  # ResNet outputs (512, 1, 1)
             emb = emb / np.linalg.norm(emb)  # normalize
             embeddings.append(emb)
 
-            metadata.append({
-                "id": img_id,
-                "filename": fname
-            })
+        metadata.append({
+            "id": img_id,
+            "filename": fname,
+            "productDisplayName": row["productDisplayName"],
+            "subCategory": row["subCategory"],
+            "gender": row["gender"]
+        })
 
     except Exception as e:
         print(f"Failed on {fname}: {e}")
 
-# Convert list to numpy to store in FAISS
+# Save to FAISS
 embedding_matrix = np.vstack(embeddings).astype("float32")
 index = faiss.IndexFlatIP(embedding_matrix.shape[1])
 index.add(embedding_matrix)
 
-# Save index and metadata
-faiss.write_index(index, "./fashion_faiss.index")
-with open("./fashion_metadata.pkl", "wb") as f:
+faiss.write_index(index, "./embeddings/resnet_faiss.index")
+with open("./embeddings/resnet_metadata.pkl", "wb") as f:
     pickle.dump(metadata, f)
 
-print(f"✅ Stored {len(metadata)} embeddings and metadata.")
+print(f"Stored {len(metadata)} ResNet18 embeddings.")
