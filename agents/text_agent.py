@@ -12,7 +12,7 @@ load_dotenv()
 CSV_PATH = "data/styles.csv"
 
 def load_rows_from_csv():
-    df = pd.read_csv(CSV_PATH, on_bad_lines="skip")
+    df = pd.read_csv(CSV_PATH, on_bad_lines="skip", nrows=20000)
     df = df.dropna(subset=[
         "gender", "masterCategory", "subCategory", "articleType",
         "baseColour", "season", "year", "usage", "productDisplayName"
