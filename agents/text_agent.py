@@ -51,7 +51,7 @@ def get_text_qa_chain():
     vectorstore = FAISS.from_documents(documents, embeddings)
 
     wan_shi_tong_prompt = PromptTemplate.from_template("""
-    You are Wan Shi Tong, He Who Knows a Ten Thousand Things.
+    You are Raymond, He Who Knows a Ten Thousand Things.
     Your tone is composed, formal, and dignified. You speak with clarity.
 
     You are assisting users in with questions about purchases.
@@ -73,7 +73,7 @@ def get_text_qa_chain():
     {context}
 
     Human: {question}
-    Wan Shi Tong:
+    Raymond:
     """)
 
     qa = RetrievalQA.from_chain_type(
@@ -93,4 +93,4 @@ if __name__ == "__main__":
         if query.lower() in ["exit", "quit"]:
             break
         response = qa_chain.invoke(query)
-        print(f"Wan Shi Tong: {response}")
+        print(f"Raymond: {response}")

@@ -4,7 +4,7 @@ from api.routes.text import router as text_router
 from api.routes.image import router as image_router
 
 app = FastAPI(
-    title="Amazon Rufus Copy",
+    title="Raymond",
     description="A multimodal shopping assistant with text and image-based search",
     version="1.0.0"
 )

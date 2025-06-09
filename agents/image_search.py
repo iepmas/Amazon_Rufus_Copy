@@ -46,6 +46,7 @@ def init_image_search():
     model, preprocess = load_clip_model()
     return index, metadata, model, preprocess
 
+# This is just for testing
 if __name__ == "__main__":
     BASE_DIR = Path(__file__).resolve().parent.parent
     INDEX_PATH = BASE_DIR / "embeddings/fashion_faiss.index"
