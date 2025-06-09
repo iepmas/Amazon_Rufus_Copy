@@ -12,7 +12,7 @@ model, preprocess = clip.load("ViT-B/32")
 
 csv_path = "data/styles.csv"
 image_folder = "data/images/"
-max_images = 44000
+max_images = 2000
 
 df = pd.read_csv(csv_path, on_bad_lines="skip")
 df = df.head(max_images)  # Too many files lol
@@ -46,8 +46,8 @@ index = faiss.IndexFlatIP(embedding_matrix.shape[1])
 index.add(embedding_matrix)
 
 # Save index and metadata
-faiss.write_index(index, ".embeddings/fashion_faiss.index")
-with open(".embeddings/fashion_metadata.pkl", "wb") as f:
+faiss.write_index(index, "./embeddings/fashion_faiss.index")
+with open("./embeddings/fashion_metadata.pkl", "wb") as f:
     pickle.dump(metadata, f)
 
 print(f"Stored {len(metadata)} embeddings and metadata.")

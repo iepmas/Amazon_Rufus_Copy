@@ -10,7 +10,7 @@ load_dotenv()
 CSV_PATH = "data/styles.csv"
 INDEX_SAVE_DIR = "embeddings/text_faiss"
 
-def load_rows_from_csv(limit=5000):
+def load_rows_from_csv(limit=2000):
     df = pd.read_csv(CSV_PATH, on_bad_lines="skip")
     df = df.dropna(subset=[
         "gender", "masterCategory", "subCategory", "articleType",
@@ -34,7 +34,7 @@ def build_documents(rows):
     return docs
 
 def main():
-    rows = load_rows_from_csv(limit=44000)
+    rows = load_rows_from_csv(limit=2000)
     documents = build_documents(rows)
     print(f"Loaded {len(documents)} entries.")
 
