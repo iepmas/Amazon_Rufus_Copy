@@ -9,37 +9,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CSV_PATH = "data/styles.csv"
-
-def load_rows_from_csv():
-    df = pd.read_csv(CSV_PATH, on_bad_lines="skip", nrows=20000)
-    df = df.dropna(subset=[
-        "gender", "masterCategory", "subCategory", "articleType",
-        "baseColour", "season", "year", "usage", "productDisplayName"
-    ])
-    rows = df[[
-        "gender", "masterCategory", "subCategory", "articleType",
-        "baseColour", "season", "year", "usage", "productDisplayName"
-    ]].values.tolist()
-    return rows
-
-def build_documents(rows):
-    docs = []
-    for r in rows:
-        text = (
-            f"{r[0]} {r[1]} > {r[2]} > {r[3]} - {r[8]} in {r[4]} color "
-            f"for {r[6]} {r[5]} ({r[7]} use)"
-        )
-        docs.append(Document(page_content=text))
-    return docs
-
 def get_text_qa_chain():
-    rows = load_rows_from_csv()
-    documents = build_documents(rows)
-    print(f"Loaded {len(documents)} entries.")
 
     embeddings = OpenAIEmbeddings()
-    vectorstore = FAISS.from_documents(documents, embeddings)
+    vectorstore = FAISS.load_local("embeddings/text_faiss", embeddings, allow_dangerous_deserialization=True)
 
     wan_shi_tong_prompt = PromptTemplate.from_template("""
     You are Raymond, He Who Knows a Ten Thousand Things.

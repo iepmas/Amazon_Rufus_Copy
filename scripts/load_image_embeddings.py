@@ -46,8 +46,8 @@ index = faiss.IndexFlatIP(embedding_matrix.shape[1])
 index.add(embedding_matrix)
 
 # Save index and metadata
-faiss.write_index(index, "./fashion_faiss.index")
-with open("./fashion_metadata.pkl", "wb") as f:
+faiss.write_index(index, ".embeddings/fashion_faiss.index")
+with open(".embeddings/fashion_metadata.pkl", "wb") as f:
     pickle.dump(metadata, f)
 
 print(f"Stored {len(metadata)} embeddings and metadata.")
