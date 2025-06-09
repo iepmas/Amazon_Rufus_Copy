@@ -3,34 +3,25 @@ from langchain_core.documents import Document
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-import mysql.connector
+import pandas as pd
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-def load_laptop_rows():
-    try:
-        db = mysql.connector.connect(
-            host="localhost",
-            port=3306,
-            user="root",
-            password="root",
-            database="commerce_ai",
-            connection_timeout=5,
-            use_pure=True
-        )
+CSV_PATH = "data/styles.csv"
 
-        cursor = db.cursor()
-        cursor.execute("SELECT gender, master_category, sub_category, article_type, base_color, season, year, usage_type, product_display_name FROM fashion_products")
-        rows = cursor.fetchall()
-        cursor.close()
-        db.close()
-        return rows
-
-    except mysql.connector.Error as err:
-        print("MySQL Error:", err)
-        exit(1)
+def load_rows_from_csv():
+    df = pd.read_csv(CSV_PATH, on_bad_lines="skip")
+    df = df.dropna(subset=[
+        "gender", "masterCategory", "subCategory", "articleType",
+        "baseColour", "season", "year", "usage", "productDisplayName"
+    ])
+    rows = df[[
+        "gender", "masterCategory", "subCategory", "articleType",
+        "baseColour", "season", "year", "usage", "productDisplayName"
+    ]].values.tolist()
+    return rows
 
 def build_documents(rows):
     docs = []
@@ -43,7 +34,7 @@ def build_documents(rows):
     return docs
 
 def get_text_qa_chain():
-    rows = load_laptop_rows()
+    rows = load_rows_from_csv()
     documents = build_documents(rows)
     print(f"Loaded {len(documents)} entries.")
 
