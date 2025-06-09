@@ -1,13 +1,35 @@
-*.jpg
-*.jpeg
-*.png
-*.json
-data/images/
-fashion_index/
-*.index
-*.pkl
-*.log
+.vscode/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pkl
+.env
+.venv/
+venv/
+env/
+*.sqlite3
 .DS_Store
-*.csv
+
+# Embeddings and models
+embeddings/
+fashion_faiss.index
+fashion_metadata.pkl
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.vite/
+
+# Data
+data/images/
+data/styles/images.csv
+
+# Logs and misc
+*.log
+*.tmp
+*.cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
