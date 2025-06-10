@@ -9,22 +9,15 @@ from PIL import Image
 from torchvision import models, transforms
 from pathlib import Path
 from typing import List, Tuple
+from image_model import get_resnet_model, get_preprocess
 
 # Load ResNet18 model
-resnet = models.resnet18(pretrained=True)
+resnet = get_resnet_model()
 resnet.eval()
 model = torch.nn.Sequential(*list(resnet.children())[:-1])  # Remove classifier layer
 
 # Define image transform
-transform = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]
-    )
-])
+transform = get_preprocess()
 
 def load_faiss_index(index_path):
     return faiss.read_index(str(index_path))

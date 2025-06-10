@@ -9,21 +9,11 @@ from PIL import Image
 from torchvision import models, transforms
 import torch
 from tqdm import tqdm
+from image_model import get_resnet_embedding_model, get_preprocess
 
-# Load ResNet18
-resnet = models.resnet18(pretrained=True)
-resnet.eval()
-model = torch.nn.Sequential(*list(resnet.children())[:-1])  # Remove final classifier
-
-transform = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]
-    )
-])
+# Load ResNet18 model
+resnet = get_resnet_embedding_model()
+transform = get_preprocess()
 
 # Load data
 csv_path = "data/styles.csv"
@@ -55,7 +45,7 @@ for _, row in tqdm(df.iterrows(), total=len(df)):
             "subCategory": row["subCategory"],
             "gender": row["gender"]
         })
-        
+
     except Exception as e:
         print(f"Failed on {fname}: {e}")
 
