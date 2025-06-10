@@ -61,7 +61,7 @@ SQLAlchemy==2.0.29
 starlette==0.36.3
 sympy==1.12
 tenacity==8.2.3
-tiktoken==0.6.0
+tiktoken==0.7.0
 torch==2.2.2+cpu
 torchvision==0.17.2+cpu
 tqdm==4.66.2
