@@ -9,14 +9,19 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Allow frontend to access this backend (CORS policy)
+origins = [
+    "http://localhost:5173",
+    "https://amazon-rufus-copy.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Include text and image search routers
 app.include_router(text_router, prefix="/api")
