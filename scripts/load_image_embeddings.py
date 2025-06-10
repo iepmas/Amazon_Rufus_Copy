@@ -1,4 +1,6 @@
 import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 import numpy as np
 import pandas as pd
 import faiss
@@ -46,10 +48,14 @@ for _, row in tqdm(df.iterrows(), total=len(df)):
             emb = emb / np.linalg.norm(emb)  # normalize
             embeddings.append(emb)
 
-            metadata.append({
-                "id": img_id,
-                "filename": fname
-            })
+        metadata.append({
+            "id": img_id,
+            "filename": fname,
+            "productDisplayName": row["productDisplayName"],
+            "subCategory": row["subCategory"],
+            "gender": row["gender"]
+        })
+        
     except Exception as e:
         print(f"Failed on {fname}: {e}")
 

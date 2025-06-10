@@ -5,7 +5,7 @@ import shutil
 
 router = APIRouter()
 
-index, metadata, model, preprocess = init_image_search()
+index, metadata = init_image_search()
 
 @router.post("/image-search")
 async def image_search(file: UploadFile = File(...)):
@@ -14,7 +14,7 @@ async def image_search(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, tmp)
             tmp_path = tmp.name
 
-        results = search_similar_images(tmp_path, index, metadata, model, preprocess)
+        results = search_similar_images(tmp_path, index, metadata)
         return {"results": results}
 
     except Exception as e:
