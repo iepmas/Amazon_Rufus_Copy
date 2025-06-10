@@ -31,9 +31,10 @@ for _, row in tqdm(df.iterrows(), total=len(df)):
 
     try:
         image = Image.open(img_path).convert("RGB")
+        image = image.resize((224, 224))
         input_tensor = transform(image).unsqueeze(0)
         with torch.no_grad():
-            emb = model(input_tensor).squeeze().numpy()
+            emb = model(input_tensor).squeeze().detach().cpu().numpy()
             emb = emb.flatten()  # ResNet outputs (512, 1, 1)
             emb = emb / np.linalg.norm(emb)  # normalize
             embeddings.append(emb)

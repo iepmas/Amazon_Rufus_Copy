@@ -28,9 +28,10 @@ def load_metadata(metadata_path):
 
 def encode_image(image_path: str):
     image = Image.open(image_path).convert("RGB")
+    image = image.resize((224, 224))
     input_tensor = transform(image).unsqueeze(0)
     with torch.no_grad():
-        emb = model(input_tensor).squeeze().numpy().flatten()
+        emb = model(input_tensor).squeeze().detach().cpu().numpy()
         emb = emb / np.linalg.norm(emb)  # normalize
     return emb.astype("float32")
 
