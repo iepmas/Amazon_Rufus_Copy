@@ -12,7 +12,7 @@ from tqdm import tqdm
 from image_model import get_resnet_embedding_model, get_preprocess
 
 # Load ResNet18 model
-resnet = get_resnet_embedding_model()
+model = get_resnet_embedding_model()
 transform = get_preprocess()
 
 # Load data
