@@ -12,6 +12,7 @@ app = FastAPI(
 origins = [
     "http://localhost:5173",
     "https://amazon-rufus-copy.vercel.app",
+    "https://ai-commerce-agent-i0tcm4sjg-iepmas-projects.vercel.app",
 ]
 
 app.add_middleware(
